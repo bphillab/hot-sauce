@@ -1,4 +1,6 @@
 import numpy as np
+import pandas as pd
+
 
 def sample_gamma(n, mode=1.0, shape=5.0):
     scale = mode / (shape - 1)
