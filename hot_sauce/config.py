@@ -22,13 +22,13 @@ PEPPER_FACTORS = {
 }
 
 PEPPER_PROBABILITIES = {
-   Peppers.BANANA: 0.1,
-   Peppers.JALAPENO: 0.4,
-   Peppers.GUAJILLO: 0.1,
-   Peppers.CAYENNE: 0.4,
-   Peppers.HABANERO: 0.5,
-   Peppers.RED_SAVINA: 0.1,
-   Peppers.NAGA_MORICH: 0.05
+   Peppers.BANANA: (0.1, 0.9),
+   Peppers.JALAPENO: (0.4, 0.6),
+   Peppers.GUAJILLO: (0.1, 0.9),
+   Peppers.CAYENNE: (0.4, 0.6),
+   Peppers.HABANERO: (0.5, 0.5),
+   Peppers.RED_SAVINA: (0.1, 0.9),
+   Peppers.NAGA_MORICH: (0.05, 0.95)
 }
 
 GREEN_PEPPERS = [
