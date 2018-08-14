@@ -1,7 +1,10 @@
 import numpy as np
 import pandas as pd
 
-from hot_sauce.utils import remove_nones
+from hot_sauce.utils import (
+    remove_nones,
+    enum_to_data_frame
+)
 
 from hot_sauce.config import (
     Peppers,
@@ -42,12 +45,6 @@ def sample_peppers(n):
         row = remove_nones(row)
         peppers.append(row)
     return peppers
-
-def enum_to_data_frame(enum, list_of_enum_values):
-    rows = [
-        [(e in row) for e in enum]
-        for row in list_of_enum_values]
-    return pd.DataFrame(rows, columns=list(e.name for e in enum))
 
 def compute_peppers_factor(peppers_df):
     return pd.Series([0.5]*len(peppers_df))
