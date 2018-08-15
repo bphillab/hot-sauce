@@ -34,7 +34,7 @@ class HotSauceData:
         ages = sample_ages(n)
         age_factor = compute_age_factor(ages)
         spicyness = pd.Series(
-            peppers_factor + age_factor + sample_gamma(mode=1.0, shape=2.0, n=n),
+            peppers_factor + age_factor + sample_gamma(mode=1.0, shape=1.1, n=n),
             name='SPICYNESS')
         return pd.concat([peppers_df, color, ages, spicyness], axis=1)
 
