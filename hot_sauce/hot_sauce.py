@@ -4,7 +4,8 @@ import pandas as pd
 from hot_sauce.utils import (
     remove_nones,
     enum_to_data_frame,
-    sample_gamma
+    sample_beta_green,
+    sample_beta_red
 )
 
 from hot_sauce.config import (
@@ -27,11 +28,13 @@ class HotSauceData:
     def sample(self, n):
         peppers = sample_peppers(n)
         peppers_df = enum_to_data_frame(Peppers, peppers)
-        peppers_factor = compute_peppers_factor(peppers)
+        peppers_factor = compute_peppers_factor(peppers_df)
         color = compute_color(peppers)
         ages = sample_ages(n)
         age_factor = compute_age_factor(ages)
-        hotness = pd.Series(peppers_factor + age_factor, name='HOTNESS')
+        spicyness = pd.Series
+            (peppers_factor + age_factor,
+            name='HOTNESS')
         return pd.concat([peppers_df, color, ages, hotness], axis=1)
 
 
@@ -50,28 +53,26 @@ def sample_peppers(n):
     return peppers
 
 def compute_peppers_factor(peppers_df):
-    return pd.Series([0.5]*len(peppers_df))
+    n = len(peppers_df)
+    spicyness_levels = np.concatenate([
+            np.repeat(PEPPER_FACTORS[p], repeats=n).reshape(-1, 1)
+            for p in Peppers],
+        axis=1)
+    spicyness_contribution = spicyness_levels * peppers_df.values
+    # Only the two spicyest peppers contribute to the spice level of the sauce.
+    spicyness = np.sort(spicyness_contribution, axis=1)[:, -2:]
+    return np.sum(spicyness, axis=1)
 
 def compute_color(peppers):
     colors = []
     for row in peppers:
         green_color = sum(
-            sample_gamma(
-                1, 
-                mode=GREEN_PEPPER_COLOR_MODE,
-                shape=GREEN_PEPPER_COLOR_SHAPE)
-            for p in row
-            if p in GREEN_PEPPERS)
+            sample_beta_green(1)[0] for p in row if p in GREEN_PEPPERS)
         red_color = sum(
-            sample_gamma(
-                1, 
-                mode=RED_PEPPER_COLOR_MODE,
-                shape=RED_PEPPER_COLOR_SHAPE)
-            for p in row
-            if p in RED_PEPPERS)
+            sample_beta_red(1)[0] for p in row if p in RED_PEPPERS)
         color = (green_color + red_color) / len(row)
         colors.append(color)
-    return pd.Series(np.concatenate(colors), name='COLOR')
+    return pd.Series(colors, name='COLOR')
 
 def sample_ages(n):
     return pd.Series([5]*n, name='AGE')
