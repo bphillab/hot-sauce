@@ -34,7 +34,7 @@ class HotSauceData:
         ages = sample_ages(n)
         age_factor = compute_age_factor(ages)
         spicyness = pd.Series(
-            peppers_factor + age_factor + sample_gamma(mode=1.0, shape=5.0, n=n),
+            peppers_factor + age_factor + sample_gamma(mode=1.0, shape=2.0, n=n),
             name='SPICYNESS')
         return pd.concat([peppers_df, color, ages, spicyness], axis=1)
 
@@ -76,17 +76,9 @@ def compute_color(peppers):
     return pd.Series(colors, name='COLOR')
 
 def sample_ages(n):
-    return pd.Series([5]*n, name='AGE')
+    return pd.Series(sample_gamma(n, mode=5.0, shape=5.0), name='AGE')
 
-def compute_age_factor(ages):
-    return pd.Series([1]*len(ages))
-
-
-#    commute_time_raw = (
-#        RAW_DISTANCE_SLOPE * raw_distance
-#            - RAW_DISTANCE_NONLINEARITY_Y_SCALE * (
-#                2 / (1 + np.exp(RAW_DISTANCE_NONLINEARITY_X_SCALE * raw_distance)
-#                         ** RAW_DISTANCE_NONLINEARITY_POWER))
-#            + TIME_OF_DAY_FACTOR_SCALING * time_of_day_factor
-#            + geometry_factor
-#            + commute_type_factor)
+def compute_age_factor(age):
+    age_factor = (
+        AGE_Y_SCALE - AGE_Y_SCALE * (2 / (1 + np.exp(AGE_X_SCALE * age))))
+    return age_factor
