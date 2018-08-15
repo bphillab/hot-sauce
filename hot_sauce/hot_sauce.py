@@ -4,6 +4,7 @@ import pandas as pd
 from hot_sauce.utils import (
     remove_nones,
     enum_to_data_frame,
+    sample_gamma,
     sample_beta_green,
     sample_beta_red
 )
@@ -32,10 +33,10 @@ class HotSauceData:
         color = compute_color(peppers)
         ages = sample_ages(n)
         age_factor = compute_age_factor(ages)
-        spicyness = pd.Series
-            (peppers_factor + age_factor,
-            name='HOTNESS')
-        return pd.concat([peppers_df, color, ages, hotness], axis=1)
+        spicyness = pd.Series(
+            peppers_factor + age_factor + sample_gamma(mode=1.0, shape=5.0, n=n),
+            name='SPICYNESS')
+        return pd.concat([peppers_df, color, ages, spicyness], axis=1)
 
 
 def sample_peppers(n):
@@ -60,7 +61,7 @@ def compute_peppers_factor(peppers_df):
         axis=1)
     spicyness_contribution = spicyness_levels * peppers_df.values
     # Only the two spicyest peppers contribute to the spice level of the sauce.
-    spicyness = np.sort(spicyness_contribution, axis=1)[:, -2:]
+    spicyness = np.sort(spicyness_contribution, axis=1)[:, -3:]
     return np.sum(spicyness, axis=1)
 
 def compute_color(peppers):
